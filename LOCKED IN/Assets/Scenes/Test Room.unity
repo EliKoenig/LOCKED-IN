@@ -1155,6 +1155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 1841651891}
   speed: 6
+  baseSpeed: 6
   gravity: -14.715
   jumpHeight: 2
   groundCheck: {fileID: 1464617910}
@@ -1163,8 +1164,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   fallMultiplier: 2.5
-  crouchSpeed: 6
+  crouchSpeed: 3
   scaleSpeed: 5
+  sprintSpeed: 8
 --- !u!1 &1865729812
 GameObject:
   m_ObjectHideFlags: 0
