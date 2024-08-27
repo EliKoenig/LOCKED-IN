@@ -56,7 +56,7 @@ public class PlayerMovement : MonoBehaviour
 
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
-        if(z > 0 || x > 0)
+        if(z > 0)
         {
             playerMesh.GetComponent<Animator>().Play("Walk");
         }
