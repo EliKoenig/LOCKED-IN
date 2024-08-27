@@ -5,11 +5,13 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterController controller;
+    public GameObject playerMesh;
 
     public float speed;
     public float baseSpeed = 6f;
     public float gravity = -9.81f;
     public float jumpHeight = 1.5f;
+
 
     public Transform groundCheck;
     public float groundCheckRadius = 0.4f;
@@ -45,7 +47,8 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask);
-
+        //Debug.Log(isGrounded);
+        Debug.Log(targetSpeed);
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
@@ -53,6 +56,10 @@ public class PlayerMovement : MonoBehaviour
 
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
+        if(z > 0 || x > 0)
+        {
+            playerMesh.GetComponent<Animator>().Play("Walk");
+        }
 
         Vector3 move = transform.right * x + transform.forward * z;
 
@@ -77,13 +84,14 @@ public class PlayerMovement : MonoBehaviour
                 isCrouching = false;
                 // Smoothly lerp to stand scale
                 transform.localScale = Vector3.Lerp(transform.localScale, playerScale, Time.deltaTime * scaleSpeed * 1.5f);
-                if (isGrounded)
-                {
-                    targetSpeed = baseSpeed; // Target base speed when standing
-                    speedLerpTime = Mathf.Min(speedLerpTime + Time.deltaTime / transitionDuration, 1f);  // Increase lerp time up to 1
-                }
+            if (isGrounded)
+            {
+                targetSpeed = baseSpeed; // Target base speed when standing
+                speedLerpTime = Mathf.Min(speedLerpTime + Time.deltaTime / transitionDuration, 1f);  // Increase lerp time up to 1
+            }
            // }
         }
+ 
 
         // Sprinting Mechanism
         if (Input.GetKey(KeyCode.LeftShift) && !isCrouching && isGrounded) // Use your preferred sprint key
