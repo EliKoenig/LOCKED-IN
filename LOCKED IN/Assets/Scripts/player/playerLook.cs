@@ -7,6 +7,7 @@ public class NewBehaviourScript : MonoBehaviour
     public float sensitivity = 100f;
 
     public Transform playerBody;
+    public GameObject currentGun;
 
     float xRotation = 0f;
     // Start is called before the first frame update

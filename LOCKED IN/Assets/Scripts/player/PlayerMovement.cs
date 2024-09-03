@@ -58,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
         float z = Input.GetAxis("Vertical");
         if(z > 0)
         {
-            playerMesh.GetComponent<Animator>().Play("Walk");
+            //playerMesh.GetComponent<Animator>().Play("Walk");
         }
 
         Vector3 move = transform.right * x + transform.forward * z;
