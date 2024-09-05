@@ -4464,6 +4464,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1928717048}
     m_Modifications:
+    - target: {fileID: 625890897485440769, guid: 9e697029eae4e6d4f800c20f6fb36c19, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1096886347509882693, guid: 9e697029eae4e6d4f800c20f6fb36c19, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1588185011002546766, guid: 9e697029eae4e6d4f800c20f6fb36c19, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3466010172724758665, guid: 9e697029eae4e6d4f800c20f6fb36c19, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745972928594988094, guid: 9e697029eae4e6d4f800c20f6fb36c19, type: 3}
+      propertyPath: spread
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745972928594988094, guid: 9e697029eae4e6d4f800c20f6fb36c19, type: 3}
+      propertyPath: shootForce
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745972928594988094, guid: 9e697029eae4e6d4f800c20f6fb36c19, type: 3}
+      propertyPath: timeBetweenShooting
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4875218258262051568, guid: 9e697029eae4e6d4f800c20f6fb36c19, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 6122946812766399404, guid: 9e697029eae4e6d4f800c20f6fb36c19, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -4474,7 +4506,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6122946812766399404, guid: 9e697029eae4e6d4f800c20f6fb36c19, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.102
       objectReference: {fileID: 0}
     - target: {fileID: 6122946812766399404, guid: 9e697029eae4e6d4f800c20f6fb36c19, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4504,9 +4536,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6602912471088572463, guid: 9e697029eae4e6d4f800c20f6fb36c19, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 6895788400922423574, guid: 9e697029eae4e6d4f800c20f6fb36c19, type: 3}
       propertyPath: m_Name
       value: Weapon Glock
+      objectReference: {fileID: 0}
+    - target: {fileID: 6895788400922423574, guid: 9e697029eae4e6d4f800c20f6fb36c19, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7378435540875918707, guid: 9e697029eae4e6d4f800c20f6fb36c19, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8969207767704607141, guid: 9e697029eae4e6d4f800c20f6fb36c19, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -50,7 +50,7 @@ public class ProjectileScript : MonoBehaviour
     {
         //check if allowed to hold down button
         if (allowButtonHold) shooting = Input.GetKey(KeyCode.Mouse0);
-        else shooting = Input.GetKey(KeyCode.Mouse0);
+        else shooting = Input.GetKeyDown(KeyCode.Mouse0);
 
         //reloading
         if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magSize && !reloading) Reload();
@@ -74,7 +74,7 @@ public class ProjectileScript : MonoBehaviour
         //set ammo display
         if (ammoDisplay != null)
         {
-            ammoDisplay.SetText(bulletsLeft + " / " + magSize / bulletsLeft);
+            ammoDisplay.SetText(bulletsLeft + " / " + magSize);
         }
     }
 
