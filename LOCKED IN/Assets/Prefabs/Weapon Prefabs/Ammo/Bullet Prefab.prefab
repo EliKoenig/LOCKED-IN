@@ -1,0 +1,119 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &4694461499127686447
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3116377904813643140, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_Parameters.colorGradient.key2.b
+      value: 0.5647059
+      objectReference: {fileID: 0}
+    - target: {fileID: 3116377904813643140, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_Parameters.colorGradient.key2.g
+      value: 0.8000001
+      objectReference: {fileID: 0}
+    - target: {fileID: 3116377904813643140, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_Parameters.colorGradient.key3.b
+      value: 0.3529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 3116377904813643140, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_Parameters.colorGradient.key3.g
+      value: 0.39607847
+      objectReference: {fileID: 0}
+    - target: {fileID: 3116377904813643140, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_Parameters.colorGradient.key3.r
+      value: 0.78823537
+      objectReference: {fileID: 0}
+    - target: {fileID: 3116377904813643140, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[1].value
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440476484949245390, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_Parameters.colorGradient.ctime1
+      value: 16962
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440476484949245390, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.g
+      value: 0.79510856
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440476484949245390, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_Parameters.colorGradient.key1.b
+      value: 0.12941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440476484949245390, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_Parameters.colorGradient.key1.g
+      value: 0.7490196
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440476484949245390, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_Parameters.colorGradient.key1.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440476484949245390, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_Parameters.colorGradient.key2.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440476484949245390, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_Parameters.colorGradient.key2.g
+      value: 0.49522805
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440476484949245390, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_Parameters.colorGradient.key2.r
+      value: 0.9433962
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440476484949245390, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[1].value
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8388590979674451459, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_Name
+      value: Bullet Prefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 9160765439955629241, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9160765439955629241, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9160765439955629241, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 9160765439955629241, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9160765439955629241, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9160765439955629241, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9160765439955629241, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9160765439955629241, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9160765439955629241, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9160765439955629241, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f7b9e3949921ab44ca87f98628376d02, type: 3}

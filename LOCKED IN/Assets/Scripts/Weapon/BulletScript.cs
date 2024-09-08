@@ -4,19 +4,12 @@ using UnityEngine;
 
 public class BulletScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     private void OnCollisionEnter(Collision collision)
     {
-        Destroy(gameObject);
+        if(collision.collider.CompareTag("Environment"))
+        {
+            Destroy(gameObject);
+        }
     }
 }

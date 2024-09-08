@@ -15,6 +15,7 @@ public class ProjectileScript : MonoBehaviour
     public bool allowButtonHold;
     int bulletsLeft, bulletsShot;
     public float spreadDistance;
+    public string reloadAnim, recoilAnim;
 
     bool shooting, readyToShoot, reloading;
 
@@ -22,9 +23,14 @@ public class ProjectileScript : MonoBehaviour
     public Transform attackPoint;
 
 
+
+
     //graphics
     public GameObject muzzleFlash;
+    public Transform muzzleFlashPos;
     public TextMeshProUGUI ammoDisplay;
+    public Animator animator;
+
 
     public bool allowInvoke = true;
     // Start is called before the first frame update
@@ -42,6 +48,8 @@ public class ProjectileScript : MonoBehaviour
             // Replace "AmmoText" with the actual name of your TextMeshProUGUI object in the scene
         }
 
+        animator = GetComponent<Animator>();
+
         bulletsLeft = magSize;
         readyToShoot = true;
     }
@@ -53,7 +61,7 @@ public class ProjectileScript : MonoBehaviour
         else shooting = Input.GetKeyDown(KeyCode.Mouse0);
 
         //reloading
-        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magSize && !reloading) Reload();
+        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magSize && !reloading && allowInvoke   ) Reload();
 
         //Reload auto if mag empty and try to shoot
         if(readyToShoot && shooting && !reloading && bulletsLeft <= 0) Reload();
@@ -117,8 +125,11 @@ public class ProjectileScript : MonoBehaviour
         //instantiate muzzle flash
         if(muzzleFlash != null)
         {
-            Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
+            GameObject Flash = Instantiate(muzzleFlash, muzzleFlashPos);
+            Destroy(Flash, 0.1f);
         }
+
+        StartCoroutine(StartRecoil());
 
         bulletsLeft--;
         bulletsShot++;
@@ -133,6 +144,19 @@ public class ProjectileScript : MonoBehaviour
             Invoke("Shoot", timeBetweenShots);
     }
 
+    IEnumerator StartRecoil()
+    {
+        animator.Play(recoilAnim);
+        yield return new WaitForSeconds(timeBetweenShooting);
+        animator.Play("New State");
+    }
+
+    IEnumerator StartReload()
+    {
+        animator.Play(reloadAnim);
+        yield return new WaitForSeconds(reloadTime);
+        animator.Play("New State");
+    }
     private void ResetShot()
     {
         readyToShoot = true;
@@ -142,6 +166,7 @@ public class ProjectileScript : MonoBehaviour
     private void Reload()
     {
         reloading = true;
+        StartCoroutine(StartReload());
         Invoke("ReloadFinished", reloadTime);
     }
     private void ReloadFinished()
