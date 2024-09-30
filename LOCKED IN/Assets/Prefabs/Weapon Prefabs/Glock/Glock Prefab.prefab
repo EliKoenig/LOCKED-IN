@@ -412,7 +412,7 @@ GameObject:
   - component: {fileID: 3147554224945287163}
   m_Layer: 7
   m_Name: Glock Prefab
-  m_TagString: Untagged
+  m_TagString: Sidearm
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -459,18 +459,22 @@ MonoBehaviour:
   spread: 0
   reloadTime: 2
   timeBetweenShots: 0
+  pulloutTime: 1
   magSize: 12
   bulletsPerTap: 1
   allowButtonHold: 0
   spreadDistance: 30
   reloadAnim: Glock Reload
   recoilAnim: Glock Recoil
+  pulloutAnim: Glock Pullout
   cam: {fileID: 0}
   attackPoint: {fileID: 143768150843403368}
   muzzleFlash: {fileID: 5419245813654136375, guid: dff1f314d4a54b24882133fb23fe9195, type: 3}
   muzzleFlashPos: {fileID: 3709852939532865442}
   ammoDisplay: {fileID: 0}
   animator: {fileID: 0}
+  weaponIcon: {fileID: 21300000, guid: b376e69d6cc23644d82ed5739731c9d2, type: 3}
+  weaponIconUI: {fileID: 0}
   allowInvoke: 1
 --- !u!95 &3147554224945287163
 Animator:

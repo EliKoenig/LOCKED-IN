@@ -781,7 +781,7 @@ GameObject:
   - component: {fileID: 3644736610237961190}
   m_Layer: 7
   m_Name: Semi Auto Rifle Prefab
-  m_TagString: Untagged
+  m_TagString: Primary
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -822,18 +822,22 @@ MonoBehaviour:
   spread: 0
   reloadTime: 2.5
   timeBetweenShots: 0
+  pulloutTime: 0
   magSize: 20
   bulletsPerTap: 1
   allowButtonHold: 0
   spreadDistance: 50
   reloadAnim: Semi Auto Reload
   recoilAnim: Semi Auto Recoil
+  pulloutAnim: 
   cam: {fileID: 0}
   attackPoint: {fileID: 990525451391043961}
   muzzleFlash: {fileID: 6536790911694863262, guid: 9e955034ce7cd7b44942115891c6bedb, type: 3}
   muzzleFlashPos: {fileID: 990525451391043961}
   ammoDisplay: {fileID: 0}
   animator: {fileID: 0}
+  weaponIcon: {fileID: 21300000, guid: 8b0d1647ae8af024aadd060969e896d5, type: 3}
+  weaponIconUI: {fileID: 0}
   allowInvoke: 1
 --- !u!95 &3644736610237961190
 Animator:

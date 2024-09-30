@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UIElements;
 
 public class ProjectileScript : MonoBehaviour
 {
@@ -10,12 +11,15 @@ public class ProjectileScript : MonoBehaviour
 
     public float shootForce, upwardForce;
 
-    public float timeBetweenShooting, spread, reloadTime, timeBetweenShots;
+    public float timeBetweenShooting, spread, reloadTime, timeBetweenShots, pulloutTime;
     public int magSize, bulletsPerTap;
     public bool allowButtonHold;
     int bulletsLeft, bulletsShot;
     public float spreadDistance;
-    public string reloadAnim, recoilAnim;
+    public string reloadAnim, recoilAnim, pulloutAnim;
+
+    private Vector3 originPos;
+    private Quaternion originRotation;
 
     bool shooting, readyToShoot, reloading;
 
@@ -30,12 +34,15 @@ public class ProjectileScript : MonoBehaviour
     public Transform muzzleFlashPos;
     public TextMeshProUGUI ammoDisplay;
     public Animator animator;
+    public Sprite weaponIcon;
+    public UnityEngine.UI.Image weaponIconUI;
 
 
     public bool allowInvoke = true;
     // Start is called before the first frame update
     void Awake()
     {
+        //gameObject.tag = weaponTag;
         if (cam == null)
         {
             cam = Camera.main;  // Automatically assigns the Main Camera
@@ -48,12 +55,40 @@ public class ProjectileScript : MonoBehaviour
             // Replace "AmmoText" with the actual name of your TextMeshProUGUI object in the scene
         }
 
+       
+
         animator = GetComponent<Animator>();
 
         bulletsLeft = magSize;
         readyToShoot = true;
+        originPos = transform.localPosition;
+        originRotation = transform.localRotation;
     }
 
+    public void OnEnable()
+    {
+        animator.Play("New State");  // Ensure the animation is reset
+        reloading = false;  // Stop reload status if any
+        transform.localPosition = originPos;
+        transform.localRotation = originRotation;
+        StartCoroutine(StartPullout());
+    }
+    public void OnDisable()
+    {
+        if (reloading)
+        {
+            StopCoroutine(StartReload());
+            reloading = false;
+            animator.Play("New State");  // Reset animation
+        }
+        transform.localPosition = originPos;
+        transform.localRotation = originRotation;
+    }
+    public void Start()
+    {
+        weaponIconUI = GameObject.Find("Weapon Image").GetComponent<UnityEngine.UI.Image>();
+        weaponIconUI.sprite = weaponIcon;
+    }
     private void MyInput()
     {
         //check if allowed to hold down button
@@ -84,6 +119,7 @@ public class ProjectileScript : MonoBehaviour
         {
             ammoDisplay.SetText(bulletsLeft + " / " + magSize);
         }
+        
     }
 
     private void Shoot()
@@ -155,6 +191,12 @@ public class ProjectileScript : MonoBehaviour
     {
         animator.Play(reloadAnim);
         yield return new WaitForSeconds(reloadTime);
+        animator.Play("New State");
+    }
+    IEnumerator StartPullout()
+    {
+        animator.Play(pulloutAnim);
+        yield return new WaitForSeconds(pulloutTime);
         animator.Play("New State");
     }
     private void ResetShot()
