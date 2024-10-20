@@ -7,6 +7,7 @@ TagManager:
   - Environment
   - Sidearm
   - Primary
+  - Ladder
   layers:
   - Default
   - TransparentFX

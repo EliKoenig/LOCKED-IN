@@ -12,7 +12,6 @@ public class PlayerMovement : MonoBehaviour
     public float gravity = -9.81f;
     public float jumpHeight = 1.5f;
 
-
     public Transform groundCheck;
     public float groundCheckRadius = 0.4f;
     public LayerMask groundMask;
@@ -36,6 +35,12 @@ public class PlayerMovement : MonoBehaviour
     bool isCrouching;
     bool isSprinting;
 
+    // Ladder variables
+    private bool isClimbing = false;
+    public float climbSpeed = 3f;
+    private bool isJumpingOffLadder = false;
+    private bool nearLadder = false; // Tracks if player is near the ladder
+
     void Start()
     {
         // Initialize speeds
@@ -47,93 +52,141 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask);
-        //Debug.Log(isGrounded);
-        //Debug.Log(targetSpeed);
-        if (isGrounded && velocity.y < 0)
+
+        if (isGrounded && velocity.y < 0 && !isClimbing)
         {
             velocity.y = -2f;
         }
 
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
-        if(z > 0)
-        {
-            //playerMesh.GetComponent<Animator>().Play("Walk");
-        }
-
         Vector3 move = transform.right * x + transform.forward * z;
 
-        // Crouch Mechanism
-        if (Input.GetKey(KeyCode.LeftControl)) // Use your preferred crouch key
+        if (isClimbing)
         {
-            isCrouching = true;
-            isSprinting = false; // Prevent sprinting while crouching
-            // Smoothly lerp to crouch scale
-            transform.localScale = Vector3.Lerp(transform.localScale, crouchScale, Time.deltaTime * scaleSpeed);
-            if (isGrounded)
+            // Ladder climbing movement
+            float climbDirection = Input.GetAxis("Vertical");
+            move = transform.up * climbDirection * climbSpeed;
+
+            // Disable gravity while climbing
+            velocity.y = 0f;
+
+            // Exit climbing if grounded and moving away from the ladder
+            if (isGrounded && (x != 0 || z != 0))
             {
-                targetSpeed = crouchSpeed; // Target crouch speed when crouching
-                speedLerpTime = Mathf.Min(speedLerpTime + Time.deltaTime / transitionDuration, 1f);  // Increase lerp time up to 1
+                isClimbing = false;
+            }
+
+            // Allow jumping while on the ladder
+            if (Input.GetButtonDown("Jump"))
+            {
+                isClimbing = false;
+                isJumpingOffLadder = true;
+                velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
             }
         }
         else
         {
-            
-           // if (Physics.Raycast(crouchCheck, Vector3.up, out RaycastHit hit, 0.2f)) 
-            //{
-                isCrouching = false;
-                // Smoothly lerp to stand scale
-                transform.localScale = Vector3.Lerp(transform.localScale, playerScale, Time.deltaTime * scaleSpeed * 1.5f);
+            // Allow player to start climbing if near the ladder and pressing "Vertical"
+            if (nearLadder && z != 0)
+            {
+                isClimbing = true;
+            }
+            else
+            {
+                // Regular movement
+                HandleMovement(move);
+            }
+        }
+
+        controller.Move(move * speed * Time.deltaTime);
+        HandleJumpAndGravity();
+    }
+
+    private void HandleMovement(Vector3 move)
+    {
+        // Crouch Mechanism
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            isCrouching = true;
+            isSprinting = false;
+            transform.localScale = Vector3.Lerp(transform.localScale, crouchScale, Time.deltaTime * scaleSpeed);
             if (isGrounded)
             {
-                targetSpeed = baseSpeed; // Target base speed when standing
-                speedLerpTime = Mathf.Min(speedLerpTime + Time.deltaTime / transitionDuration, 1f);  // Increase lerp time up to 1
+                targetSpeed = crouchSpeed;
+                speedLerpTime = Mathf.Min(speedLerpTime + Time.deltaTime / transitionDuration, 1f);
             }
-           // }
         }
- 
+        else
+        {
+            isCrouching = false;
+            transform.localScale = Vector3.Lerp(transform.localScale, playerScale, Time.deltaTime * scaleSpeed * 1.5f);
+            if (isGrounded)
+            {
+                targetSpeed = baseSpeed;
+                speedLerpTime = Mathf.Min(speedLerpTime + Time.deltaTime / transitionDuration, 1f);
+            }
+        }
 
         // Sprinting Mechanism
-        if (Input.GetKey(KeyCode.LeftShift) && !isCrouching && isGrounded) // Use your preferred sprint key
+        if (Input.GetKey(KeyCode.LeftShift) && !isCrouching && isGrounded)
         {
             isSprinting = true;
-            targetSpeed = sprintSpeed; // Target sprint speed when sprinting
-            speedLerpTime = Mathf.Min(speedLerpTime + Time.deltaTime / transitionDuration, 1f);  // Increase lerp time up to 1
+            targetSpeed = sprintSpeed;
+            speedLerpTime = Mathf.Min(speedLerpTime + Time.deltaTime / transitionDuration, 1f);
         }
-        else if (!Input.GetKey(KeyCode.LeftShift) && !isCrouching) // Ensure we're not crouching when stopping sprint
+        else if (!Input.GetKey(KeyCode.LeftShift) && !isCrouching)
         {
             isSprinting = false;
-            targetSpeed = baseSpeed; // Return to base speed when not sprinting
-            if(!isGrounded)
-                speedLerpTime = Mathf.Min(speedLerpTime + Time.deltaTime / transitionDuration, 1f);  // Increase lerp time up to 1
+            targetSpeed = baseSpeed;
+            if (!isGrounded)
+                speedLerpTime = Mathf.Min(speedLerpTime + Time.deltaTime / transitionDuration, 1f);
         }
 
-        // Smoothly interpolate the speed
         speed = Mathf.Lerp(speed, targetSpeed, speedLerpTime);
-
-        // Reset lerp time once target speed is reached
         if (Mathf.Abs(speed - targetSpeed) < 0.01f)
         {
             speedLerpTime = 0f;
         }
+    }
 
-        controller.Move(move * speed * Time.deltaTime);
+    private void HandleJumpAndGravity()
+    {
+        if (!isClimbing)
+        {
+            if (Input.GetButtonDown("Jump") && isGrounded)
+            {
+                velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
+            }
 
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
-            velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
-        }
-
-        // Apply gravity
-        if (velocity.y < 2f)
-        {
-            velocity.y += gravity * fallMultiplier * Time.deltaTime; // Apply increased gravity when falling
-        }
-        else
-        {
-            velocity.y += gravity * Time.deltaTime; // Normal gravity when rising
+            if (velocity.y < 2f)
+            {
+                velocity.y += gravity * fallMultiplier * Time.deltaTime;
+            }
+            else
+            {
+                velocity.y += gravity * Time.deltaTime;
+            }
         }
 
         controller.Move(velocity * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Ladder"))
+        {
+            nearLadder = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Ladder"))
+        {
+            nearLadder = false;
+            isClimbing = false;
+            isJumpingOffLadder = false;
+        }
     }
 }
