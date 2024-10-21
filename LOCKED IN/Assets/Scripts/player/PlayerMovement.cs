@@ -51,6 +51,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(isClimbing);
         isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask);
 
         if (isGrounded && velocity.y < 0 && !isClimbing)
@@ -72,10 +73,10 @@ public class PlayerMovement : MonoBehaviour
             velocity.y = 0f;
 
             // Exit climbing if grounded and moving away from the ladder
-            if (isGrounded && (x != 0 || z != 0))
+           /* if (isGrounded && (x != 0 || z != 0))
             {
                 isClimbing = false;
-            }
+            }*/
 
             // Allow jumping while on the ladder
             if (Input.GetButtonDown("Jump"))
@@ -88,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             // Allow player to start climbing if near the ladder and pressing "Vertical"
-            if (nearLadder && z != 0)
+            if (nearLadder)
             {
                 isClimbing = true;
             }
