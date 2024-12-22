@@ -8,6 +8,7 @@ TagManager:
   - Sidearm
   - Primary
   - Ladder
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -17,8 +18,8 @@ TagManager:
   - UI
   - Ground
   - Weapons
-  - 
-  - 
+  - WhatIsPlayer
+  - WhatIsEnemy
   - 
   - 
   - 
