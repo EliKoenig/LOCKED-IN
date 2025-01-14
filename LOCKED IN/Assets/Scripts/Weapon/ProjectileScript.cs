@@ -12,7 +12,7 @@ public class ProjectileScript : MonoBehaviour
     public float shootForce, upwardForce;
 
     public float timeBetweenShooting, spread, reloadTime, timeBetweenShots, pulloutTime;
-    public int magSize, bulletsPerTap;
+    public int magSize, bulletsPerTap, damage;
     public bool allowButtonHold;
     int bulletsLeft, bulletsShot;
     public float spreadDistance;
@@ -25,6 +25,8 @@ public class ProjectileScript : MonoBehaviour
 
     public Camera cam;
     public Transform attackPoint;
+    public AudioSource source;
+    public AudioClip shootClip, enemyDie, hurt;
 
 
 
@@ -105,7 +107,7 @@ public class ProjectileScript : MonoBehaviour
         if(readyToShoot && shooting && !reloading && bulletsLeft > 0)
         {
             bulletsShot = 0;
-
+            source.PlayOneShot(shootClip);
             Shoot();
         }
     }
@@ -122,49 +124,33 @@ public class ProjectileScript : MonoBehaviour
         
     }
 
-    private void Shoot()
+    public void Shoot()
     {
         readyToShoot = false;
-
-        //raycast to find target
-        Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        
         RaycastHit hit;
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit))
+        {
+            MeleeEnemy meleeEnemy = hit.transform.GetComponent<MeleeEnemy>();
+            if (meleeEnemy != null)
+            {
+                if(meleeEnemy.health - damage <= 0)
+                {
+                    source.PlayOneShot(enemyDie);
+                }
+                meleeEnemy.TakeDamage(damage);
 
-        //check if ray hits something
-        Vector3 targetPoint;
-        if (Physics.Raycast(ray, out hit))
-            targetPoint = hit.point;
-        else
-            targetPoint = ray.GetPoint(75); //Just a point far away from the player
-
-
-        //calc direction from attackpoint to targetpoint
-        Vector3 dirWithoutSpread = targetPoint - attackPoint.position;
-
-        //calc spread
-        float x = Random.Range(-spread, spread);
-        float y = Random.Range(-spread, spread);
-        float z = Random.Range(-spread, spread);
-
-        //calc new direction with spread
-        Vector3 dirWithSpread = dirWithoutSpread + new Vector3(x, y, z);
-
-        //instantiate bullet
-        GameObject currentBullet = Instantiate(projectile, attackPoint.position, Quaternion.identity);
-        //rotate bullet in shoot dir
-        currentBullet.transform.forward = dirWithSpread.normalized;
-
-        //add force to bullet
-        currentBullet.GetComponent<Rigidbody>().AddForce(dirWithSpread.normalized * shootForce, ForceMode.Impulse);
+            }
+        }
         // this is for bounding projectiles: currentBullet.GetComponent<Rigidbody>().AddForce(cam.transform.up * upwardForce, ForceMode.Impulse);
         
         //instantiate muzzle flash
-        if(muzzleFlash != null)
+        if (muzzleFlash != null)
         {
             GameObject Flash = Instantiate(muzzleFlash, muzzleFlashPos);
             Destroy(Flash, 0.1f);
         }
-
+        
         StartCoroutine(StartRecoil());
 
         bulletsLeft--;

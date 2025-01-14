@@ -15,6 +15,8 @@ public class Health : MonoBehaviour
     public int shield;
     public GameObject shieldParent;
     public GameObject deathText;
+    public AudioSource source;
+    public AudioClip hurt;
 
 
     void Awake()
@@ -48,6 +50,7 @@ public class Health : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        source.PlayOneShot(hurt);
         if (shield > 0)
         {
             int remainingDamage = Mathf.Max(damage - shield, 0);
