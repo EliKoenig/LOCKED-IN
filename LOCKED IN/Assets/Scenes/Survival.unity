@@ -49348,23 +49348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4279c2dfcd4e2314aace75b402ff4a1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent: {fileID: 1496693803}
-  player: {fileID: 1124648664}
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 64
-  whatIsPlayer:
-    serializedVersion: 2
-    m_Bits: 256
-  health: 80
-  walkPoint: {x: 0, y: 0, z: 0}
-  walkPointRange: 7.5
-  timeBetweenAttacks: 1
-  projectile: {fileID: 1070927855372086273, guid: 893a5fb52c046a84596afac09ada5a68, type: 3}
-  sightRange: 25
-  attackRange: 20
-  playerInSightRange: 0
-  playerInAttackRange: 0
+  currentState: 
 --- !u!195 &1496693803
 NavMeshAgent:
   m_ObjectHideFlags: 0
