@@ -5,17 +5,15 @@ using UnityEngine;
 
 public class Path : MonoBehaviour
 {
+    public List<Transform> possibleWaypoints = new List<Transform>();
 
-    public List<Transform> waypoints = new List<Transform>();
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    void Awake()
     {
-        
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

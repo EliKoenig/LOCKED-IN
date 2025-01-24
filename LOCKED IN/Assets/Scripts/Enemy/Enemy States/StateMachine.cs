@@ -4,10 +4,12 @@ using System.Collections;
 public class StateMachine : MonoBehaviour
 {
     public BaseState activeState;
+    public PatrolState patrolState;
 
     public void Initialize()
     {
-        //setup default state.
+        patrolState = new PatrolState();
+        ChangeState(patrolState);
     }
     void Start()
     {
@@ -33,7 +35,7 @@ public class StateMachine : MonoBehaviour
         {
             //setup new state
             activeState.stateMachince = this;
-
+            activeState.enemy = GetComponent<EnemyGun>();   
             activeState.Enter();
         }
     }
