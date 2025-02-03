@@ -5,19 +5,15 @@ using UnityEngine;
 
 public class NewBehaviourScript : MonoBehaviour
 {
-    public float sensitivity = 100f;
-    public Transform playerBody;   // The player's body (the object that rotates left and right)
-    public GameObject currentGun;
-    public GameObject cameraPos;   // The empty GameObject attached to the player that represents the camera's desired position
+    //public float sensitivity = 100f;  // The player's body (the object that rotates left and right)
+    //public GameObject currentGun;
+    /// <summary>
+    // The empty GameObject attached to the player that represents the camera's desired position
+    /// </summary>
 
-    float xRotation = 0f;
+    // float xRotation = 0f;
 
-    void Start()
-    {
-        // Lock the cursor to the center of the screen and hide it
-        Cursor.lockState = CursorLockMode.Locked;
-    }
-
+    /*
     void LateUpdate()
     {
         // Update the camera position to match the cameraPos GameObject's position
@@ -47,5 +43,48 @@ public class NewBehaviourScript : MonoBehaviour
     {
         
 
+    }
+    /*
+
+    */
+
+    public Transform player;         // Player transform
+    public Transform cameraTarget;   // Assign "CameraHolder" in Inspector
+    private Vector2 rotation;
+
+    private Quaternion originalRotation;
+
+    public float HORIZONTAL_ROTATION_SPEED = 2f;
+    public float VERTICAL_ROTATION_SPEED = 2f;
+    private const int VERTICAL_ROTATION_MIN = -90;
+    private const int VERTICAL_ROTATION_MAX = 90;
+
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        originalRotation = transform.localRotation;
+    }
+
+    private void Update()
+    {
+        // Get mouse input
+        rotation.x = Input.GetAxisRaw("Mouse X") * HORIZONTAL_ROTATION_SPEED;
+        rotation.y += Input.GetAxisRaw("Mouse Y") * VERTICAL_ROTATION_SPEED;
+        rotation.y = Mathf.Clamp(rotation.y, VERTICAL_ROTATION_MIN, VERTICAL_ROTATION_MAX);
+
+        // Rotate the player left/right (yaw)
+        player.localRotation *= Quaternion.AngleAxis(rotation.x, Vector3.up);
+    }
+
+    private void LateUpdate()
+    {
+        if (cameraTarget != null)
+        {
+            // Move camera to CameraHolder's position
+            transform.position = cameraTarget.position;
+
+            // Apply vertical rotation (up/down) while keeping horizontal rotation from the player
+            transform.rotation = player.rotation * Quaternion.AngleAxis(rotation.y, Vector3.left);
+        }
     }
 }
