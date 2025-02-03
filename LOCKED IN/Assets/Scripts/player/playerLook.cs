@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class NewBehaviourScript : MonoBehaviour
@@ -17,10 +18,10 @@ public class NewBehaviourScript : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    void Update()
+    void LateUpdate()
     {
         // Update the camera position to match the cameraPos GameObject's position
-        transform.position = cameraPos.transform.position;
+        
 
         // Get mouse input
         float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
@@ -37,7 +38,14 @@ public class NewBehaviourScript : MonoBehaviour
         playerBody.Rotate(Vector3.up * mouseX);
 
         // Now, match the camera's Y rotation with the player's rotation to ensure it looks left and right with the player
-        Quaternion playerRotation = playerBody.rotation;
-        transform.rotation = Quaternion.Euler(xRotation, playerRotation.eulerAngles.y, 0f);
+        //Quaternion playerRotation = playerBody.rotation;
+        //transform.rotation = Quaternion.Euler(xRotation, playerRotation.eulerAngles.y, 0f);
+        if(mouseX > 0f && mouseY > 0f) 
+        Debug.Log($"MouseX: {mouseX}, MouseY: {mouseY}");
+    }
+    private void Update()
+    {
+        
+
     }
 }

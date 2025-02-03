@@ -141,6 +141,15 @@ public class ProjectileScript : MonoBehaviour
                 meleeEnemy.TakeDamage(damage);
 
             }
+            EnemyGun enemyGun = hit.transform.GetComponentInParent<EnemyGun>();
+            if (enemyGun != null)
+            {
+                if (enemyGun.health - damage <= 0)
+                {
+                    source.PlayOneShot(enemyDie);
+                }
+                enemyGun.TakeDamage(damage);
+            }
         }
         // this is for bounding projectiles: currentBullet.GetComponent<Rigidbody>().AddForce(cam.transform.up * upwardForce, ForceMode.Impulse);
         

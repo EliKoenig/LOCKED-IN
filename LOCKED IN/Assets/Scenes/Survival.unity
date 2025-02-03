@@ -6376,7 +6376,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 1000
-  field of view: 60
+  field of view: 70
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -8815,7 +8815,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c1fb576ffebd9541a8aa287fd1ef4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensitivity: 300
+  sensitivity: 100
   playerBody: {fileID: 1124648664}
   currentGun: {fileID: 120174510}
   cameraPos: {fileID: 313332015}
@@ -8887,13 +8887,13 @@ Transform:
   m_GameObject: {fileID: 275545571}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.9229996, y: 2.0149999, z: -1.9549999}
+  m_LocalPosition: {x: -0.0070004463, y: 0.89499986, z: 0.045000076}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 120174512}
   - {fileID: 156669077}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1124648664}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &285654662
 GameObject:
@@ -40228,6 +40228,7 @@ Transform:
   - {fileID: 1929959348}
   - {fileID: 7872827}
   - {fileID: 313332016}
+  - {fileID: 275545575}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1124648665
@@ -59791,7 +59792,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1562051116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59821,9 +59822,10 @@ MonoBehaviour:
   path: {fileID: 647808420}
   sightDistance: 20
   fov: 85
+  health: 80
   eyeHeight: 0.6
-  gunBarrel: {fileID: 0}
-  fireRate: 1.3
+  gunBarrel: {fileID: 649160440}
+  fireRate: 0.9
 --- !u!195 &1562051118
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -59834,7 +59836,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 0
+  m_Speed: 4
   m_Acceleration: 5
   avoidancePriority: 50
   m_AngularSpeed: 100
@@ -59842,8 +59844,8 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 1.7
-  m_BaseOffset: 0.81
+  m_Height: 2.4
+  m_BaseOffset: 1.68
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!4 &1562051119
@@ -59855,7 +59857,7 @@ Transform:
   m_GameObject: {fileID: 1562051115}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.69, y: 1.78, z: -12.17}
+  m_LocalPosition: {x: 5.69, y: 2.233, z: -12.17}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -114169,7 +114171,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1124648664}
-  - {fileID: 275545575}
   - {fileID: 1788647833}
   - {fileID: 1870910926}
   - {fileID: 225368233}

@@ -15,9 +15,12 @@ public class EnemyGun : MonoBehaviour
     private string currentState;
     public Path path;
     private GameObject player;
+    private Vector3 lastKnowPos;
     public float sightDistance = 20f;
     public float fov = 85f;
+    public int health = 80;
     public float eyeHeight;
+    public Vector3 LastKnowPos { get => lastKnowPos; set => lastKnowPos = value; }
 
     public Transform gunBarrel;
     [Range(0.1f, 10f)]
@@ -45,6 +48,17 @@ public class EnemyGun : MonoBehaviour
             int randomIndex = Random.Range(0, tempWaypoints.Count);
             waypoints.Add(tempWaypoints[randomIndex]);
             tempWaypoints.RemoveAt(randomIndex); // Remove the chosen waypoint to avoid duplicates
+        }
+    }
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        Debug.Log("Enemy takes " + damage + " damage. Remaining health: " + health);
+
+        if (health <= 0)
+        {
+            Debug.Log("Enemy has been defeated!");
+            Destroy(gameObject);
         }
     }
     public void Update()

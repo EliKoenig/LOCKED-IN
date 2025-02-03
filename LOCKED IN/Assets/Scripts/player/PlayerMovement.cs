@@ -51,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(isClimbing);
+        //Debug.Log(isClimbing);
         isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask);
 
         if (isGrounded && velocity.y < 0 && !isClimbing)
