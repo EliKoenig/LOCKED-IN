@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
 public class AttackState : BaseState
 {
@@ -67,10 +68,11 @@ public class AttackState : BaseState
     }
     public void Shoot()
     {
+        enemy.source.PlayOneShot(enemy.shootClip);
         Transform gunBarrel = enemy.gunBarrel;
         GameObject bullet = GameObject.Instantiate(Resources.Load("Prefabs/EnemyBullet") as GameObject, gunBarrel.position, enemy.transform.rotation);
         Vector3 shootDir = (enemy.Player.transform.position - gunBarrel.position).normalized;
-        bullet.GetComponent<Rigidbody>().linearVelocity = Quaternion.AngleAxis(Random.Range(-2f, 2f), Vector3.up) * shootDir * 40;
+        bullet.GetComponent<Rigidbody>().linearVelocity = Quaternion.AngleAxis(Random.Range(-2f, 2f), Vector3.up) * shootDir * 50;
 
         shotTimer = 0;
     }

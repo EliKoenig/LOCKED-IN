@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using static Unity.VisualScripting.Member;
 
 public class MeleeEnemy : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class MeleeEnemy : MonoBehaviour
     private Health targetHealth;
     private bool isAttacking;
     private Animator animator;
+    public AudioSource source;
+   
 
     void Start()
     {

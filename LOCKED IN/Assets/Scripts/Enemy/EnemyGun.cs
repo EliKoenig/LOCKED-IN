@@ -20,6 +20,8 @@ public class EnemyGun : MonoBehaviour
     public float fov = 85f;
     public int health = 80;
     public float eyeHeight;
+    public AudioSource source;
+    public AudioClip shootClip;
     public Vector3 LastKnowPos { get => lastKnowPos; set => lastKnowPos = value; }
 
     public Transform gunBarrel;
@@ -32,6 +34,7 @@ public class EnemyGun : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         stateMachine.Initialize();
         player = GameObject.FindGameObjectWithTag("Player");
+        path = GameObject.FindGameObjectWithTag("Path").GetComponent<Path>();
 
         if (path.possibleWaypoints.Count < 4)
         {
@@ -54,6 +57,7 @@ public class EnemyGun : MonoBehaviour
     {
         health -= damage;
         Debug.Log("Enemy takes " + damage + " damage. Remaining health: " + health);
+        
 
         if (health <= 0)
         {

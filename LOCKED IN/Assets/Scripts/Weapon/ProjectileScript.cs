@@ -26,7 +26,7 @@ public class ProjectileScript : MonoBehaviour
     public Camera cam;
     public Transform attackPoint;
     public AudioSource source;
-    public AudioClip shootClip, enemyDie, hurt;
+    public AudioClip shootClip, enemyDie, hurt, hitClip;
 
 
 
@@ -134,20 +134,24 @@ public class ProjectileScript : MonoBehaviour
             MeleeEnemy meleeEnemy = hit.transform.GetComponent<MeleeEnemy>();
             if (meleeEnemy != null)
             {
-                if(meleeEnemy.health - damage <= 0)
+                source.PlayOneShot(hitClip);
+                if (meleeEnemy.health - damage <= 0)
                 {
                     source.PlayOneShot(enemyDie);
                 }
+                
                 meleeEnemy.TakeDamage(damage);
 
             }
             EnemyGun enemyGun = hit.transform.GetComponentInParent<EnemyGun>();
             if (enemyGun != null)
             {
+                source.PlayOneShot(hitClip);
                 if (enemyGun.health - damage <= 0)
                 {
                     source.PlayOneShot(enemyDie);
                 }
+                
                 enemyGun.TakeDamage(damage);
             }
         }
