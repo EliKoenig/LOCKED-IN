@@ -19,6 +19,7 @@ public class EnemyGun : MonoBehaviour
     public float sightDistance = 20f;
     public float fov = 85f;
     public int health = 80;
+    public float accuracy;
     public float eyeHeight;
     public AudioSource source;
     public AudioClip shootClip;

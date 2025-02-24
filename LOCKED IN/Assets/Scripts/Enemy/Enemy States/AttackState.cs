@@ -72,7 +72,7 @@ public class AttackState : BaseState
         Transform gunBarrel = enemy.gunBarrel;
         GameObject bullet = GameObject.Instantiate(Resources.Load("Prefabs/EnemyBullet") as GameObject, gunBarrel.position, enemy.transform.rotation);
         Vector3 shootDir = (enemy.Player.transform.position - gunBarrel.position).normalized;
-        bullet.GetComponent<Rigidbody>().linearVelocity = Quaternion.AngleAxis(Random.Range(-2f, 2f), Vector3.up) * shootDir * 50;
+        bullet.GetComponent<Rigidbody>().linearVelocity = Quaternion.AngleAxis(Random.Range(-enemy.accuracy, enemy.accuracy), Vector3.up) * shootDir * 60;
 
         shotTimer = 0;
     }

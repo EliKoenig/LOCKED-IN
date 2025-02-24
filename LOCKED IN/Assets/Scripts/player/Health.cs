@@ -4,12 +4,14 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using Unity.VisualScripting;
 
 public class Health : MonoBehaviour
 {
+    public ProjectileScript projectileScript;
     public int health;
     public TextMeshProUGUI healthUI;
-    public TextMeshProUGUI shieldUI;
+    public TextMeshProUGUI shieldUI, timeUI, scoreUI, timerUI, deathUI;
     public UnityEngine.UI.Image shieldImage;
     public int maxHealth;
     public int shield;
@@ -18,12 +20,24 @@ public class Health : MonoBehaviour
     public AudioSource source;
     public AudioClip hurt;
 
+    private float timeSurvived;
+    private float countdownTimer = 90f; // Countdown starts at 60 seconds
+    private bool isAlive = true;  // To check if the player is alive
 
     void Awake()
     {
-        healthUI = GameObject.Find("Health Text").GetComponent<TextMeshProUGUI>();
-        shieldUI = GameObject.Find("Shield Text").GetComponent<TextMeshProUGUI>();
+        // Assign UI elements safely
+        healthUI = GameObject.Find("Health Text")?.GetComponent<TextMeshProUGUI>();
+        shieldUI = GameObject.Find("Shield Text")?.GetComponent<TextMeshProUGUI>();
+       // timeUI = GameObject.Find("Time Text")?.GetComponent<TextMeshProUGUI>();
+        timerUI = GameObject.Find("Timer Text")?.GetComponent<TextMeshProUGUI>();
         shieldParent = GameObject.Find("Shield Parent");
+
+        // Debugging in case objects aren't found
+        if (!healthUI) Debug.LogError("Health UI not found!");
+        if (!shieldUI) Debug.LogError("Shield UI not found!");
+        if (!timeUI) Debug.LogError("Time UI not found!");
+        if (!timerUI) Debug.LogError("Timer UI not found!");
     }
 
     void Start()
@@ -31,15 +45,42 @@ public class Health : MonoBehaviour
         health = 100;
         maxHealth = 100;
         shield = 0;
+        timeSurvived = 0f;
+
+        // Initialize UI text
+        if (timerUI) timerUI.SetText("Timer: 90.0");
+        if (healthUI) healthUI.SetText(health + " / " + maxHealth);
     }
 
     void Update()
     {
-        healthUI.SetText(health + " / " + maxHealth);
+        if (isAlive)
+        {
+            timeSurvived += Time.deltaTime;  // Increment time while alive
+            if (timeUI) timeUI.SetText("Time: " + Mathf.FloorToInt(timeSurvived)); // Update UI
+
+            // Countdown logic
+            if (countdownTimer > 0)
+            {
+                countdownTimer -= Time.deltaTime;
+                countdownTimer = Mathf.Max(countdownTimer, 0); // Ensures it doesn't go below 0
+
+                if (timerUI) timerUI.SetText("Timer: " + countdownTimer.ToString("F1")); // Display with two decimal places
+            }
+            else
+            {
+                EndGame();  
+            }
+        }
+
+        // Update health display independently
+        if (healthUI) healthUI.SetText(health + " / " + maxHealth);
+
+        // Shield logic
         if (shield > 0)
         {
             shieldParent.SetActive(true);
-            shieldUI.SetText(shield + "");
+            if (shieldUI) shieldUI.SetText(shield + "");
         }
         else
         {
@@ -72,24 +113,28 @@ public class Health : MonoBehaviour
     private void Die()
     {
         Debug.Log("Player has died!");
-
         deathText.SetActive(true);
+        isAlive = false; // Stop the timers
+
+        if (timeUI) timeUI.SetText("Time: " + Mathf.FloorToInt(timeSurvived)); // Set final time
+        if (scoreUI) scoreUI.SetText("Score: " + projectileScript.score);
+        if (timerUI) timerUI.SetText("Timer: 00.00"); // Stop the countdown at 0
 
         // Pause the game
         Time.timeScale = 0;
-
-        // Display a death message or UI (optional)
-        // You can add a UI element to indicate that the game is paused because the player has died
-        
     }
-
-    private void ShowDeathScreen()
+    private void EndGame()
     {
-        // Example implementation
-        GameObject deathScreen = GameObject.Find("Death Text Parent"); // Ensure you have a GameObject named "Death Screen" in your scene
-        if (deathScreen != null)
-        {
-            deathScreen.SetActive(true);
-        }
+        Debug.Log("Timer Ended");
+        deathText.SetActive(true);
+        deathUI.SetText("Game Over!");
+        isAlive = false; // Stop the timers
+
+        if (timeUI) timeUI.SetText("Time: " + Mathf.FloorToInt(timeSurvived)); // Set final time
+        if (scoreUI) scoreUI.SetText("Score: " + projectileScript.score);
+        if (timerUI) timerUI.SetText(""); // Stop the countdown at 0
+
+        // Pause the game
+        Time.timeScale = 0;
     }
 }

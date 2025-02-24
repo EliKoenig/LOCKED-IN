@@ -6,6 +6,10 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene("Control Scene");
     }
+    public void PlayGPGame()
+    {
+        SceneManager.LoadScene("Gameplay Scene");
+    }
     public void QuitGame()
     {
         Debug.Log("Quit Game");

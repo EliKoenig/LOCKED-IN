@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 754376202949473353}
   - component: {fileID: 1359300940546592808}
   m_Layer: 0
-  m_Name: RangedEnemy
+  m_Name: GPRangedEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -185,7 +185,7 @@ MonoBehaviour:
   sightDistance: 30
   fov: 110
   health: 80
-  accuracy: 2
+  accuracy: 1.5
   eyeHeight: 0.6
   source: {fileID: 1359300940546592808}
   shootClip: {fileID: 8300000, guid: 1506d966efdfc144f9a93f3bea9a1a3f, type: 3}

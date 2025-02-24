@@ -9,6 +9,7 @@ public class ProjectileScript : MonoBehaviour
 
     public GameObject projectile;
 
+    public int score = 0;
     public float shootForce, upwardForce;
 
     public float timeBetweenShooting, spread, reloadTime, timeBetweenShots, pulloutTime;
@@ -137,6 +138,7 @@ public class ProjectileScript : MonoBehaviour
                 source.PlayOneShot(hitClip);
                 if (meleeEnemy.health - damage <= 0)
                 {
+                    score += 1;
                     source.PlayOneShot(enemyDie);
                 }
                 
@@ -149,6 +151,7 @@ public class ProjectileScript : MonoBehaviour
                 source.PlayOneShot(hitClip);
                 if (enemyGun.health - damage <= 0)
                 {
+                    score += 1;
                     source.PlayOneShot(enemyDie);
                 }
                 
