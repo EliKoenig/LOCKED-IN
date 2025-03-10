@@ -7,6 +7,9 @@ public class PlayerMovement : MonoBehaviour
     public CharacterController controller;
     public GameObject playerMesh;
 
+    public GameObject weapon;
+    public GPProjectileScript GPProjectileScript;
+
     public float speed;
     public float baseSpeed = 6f;
     public float gravity = -9.81f;
@@ -46,6 +49,7 @@ public class PlayerMovement : MonoBehaviour
         // Initialize speeds
         speed = baseSpeed;
         targetSpeed = baseSpeed;
+        GPProjectileScript = weapon.GetComponent<GPProjectileScript>();
     }
 
     // Update is called once per frame
@@ -178,6 +182,12 @@ public class PlayerMovement : MonoBehaviour
         if (other.CompareTag("Ladder"))
         {
             nearLadder = true;
+        }
+        if (other.CompareTag("Ammo"))
+        {
+            Debug.Log("player touched ammo");
+            GPProjectileScript.extraAmmo += 12;
+            Destroy(other.gameObject);
         }
     }
 

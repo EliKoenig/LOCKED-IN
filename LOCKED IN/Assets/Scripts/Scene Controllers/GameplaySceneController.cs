@@ -5,12 +5,12 @@ using UnityEngine;
 public class GameplaySceneController : MonoBehaviour
 {
     public List<Transform> spawnpoints = new List<Transform>();
+    public List<Transform> ammoPoints = new List<Transform>();
 
     public float initialSpawnRate = 5f; // Start with 5 seconds between spawns
     public float minSpawnRate = 1f; // Minimum spawn rate (1 second)
     public float spawnRateDecrease = 1f; // Decrease by 1 second
     public float decreaseInterval = 20f; // Decrease spawn time every 20 seconds
-    string[] enemyTypes = { "Prefabs/GameplayRangedEnemy", "Prefabs/GameplayMeleeEnemy" };
 
     private float currentSpawnRate;
 
@@ -19,6 +19,7 @@ public class GameplaySceneController : MonoBehaviour
         currentSpawnRate = initialSpawnRate;
         StartCoroutine(SpawnEnemiesRepeatedly());
         StartCoroutine(DecreaseSpawnRateOverTime());
+        StartCoroutine(SpawnAmmoCratesRepeatedly()); // Start ammo spawn coroutine
     }
 
     IEnumerator SpawnEnemiesRepeatedly()
@@ -26,7 +27,6 @@ public class GameplaySceneController : MonoBehaviour
         while (true)
         {
             SpawnEnemy();
-            Debug.Log(currentSpawnRate);
             yield return new WaitForSeconds(currentSpawnRate);
         }
     }
@@ -35,8 +35,17 @@ public class GameplaySceneController : MonoBehaviour
     {
         while (currentSpawnRate > minSpawnRate)
         {
-            yield return new WaitForSeconds(decreaseInterval); // Wait 20 seconds
+            yield return new WaitForSeconds(decreaseInterval);
             currentSpawnRate = Mathf.Max(currentSpawnRate - spawnRateDecrease, minSpawnRate);
+        }
+    }
+
+    IEnumerator SpawnAmmoCratesRepeatedly()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(12f); // Spawn ammo crate every 20 seconds
+            SpawnAmmoCrate();
         }
     }
 
@@ -49,11 +58,8 @@ public class GameplaySceneController : MonoBehaviour
         }
 
         Transform spawnpoint = spawnpoints[Random.Range(0, spawnpoints.Count)];
-
-        // Randomly select an enemy type
         string[] enemyTypes = { "Prefabs/RangedEnemy", "Prefabs/MeleeEnemy" };
         string selectedEnemy = enemyTypes[Random.Range(0, enemyTypes.Length)];
-
         GameObject enemyPrefab = Resources.Load<GameObject>(selectedEnemy);
 
         if (enemyPrefab == null)
@@ -64,4 +70,25 @@ public class GameplaySceneController : MonoBehaviour
 
         Instantiate(enemyPrefab, spawnpoint.position, spawnpoint.rotation);
     }
+
+    void SpawnAmmoCrate()
+    {
+        if (ammoPoints.Count == 0)
+        {
+            Debug.LogError("No ammo points assigned!");
+            return;
+        }
+
+        Transform ammoSpawn = ammoPoints[Random.Range(0, ammoPoints.Count)];
+        GameObject ammoPrefab = Resources.Load<GameObject>("Prefabs/BulletPickup");
+
+        if (ammoPrefab == null)
+        {
+            Debug.LogError("Failed to load ammo pickup prefab. Check the path in Resources.");
+            return;
+        }
+
+        Instantiate(ammoPrefab, ammoSpawn.position, ammoSpawn.rotation);
+    }
 }
+

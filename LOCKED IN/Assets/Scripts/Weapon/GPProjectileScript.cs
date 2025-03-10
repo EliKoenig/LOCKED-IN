@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UIElements;
 
-public class ProjectileScript : MonoBehaviour
+public class GPProjectileScript : MonoBehaviour
 {
 
     public GameObject projectile;
@@ -13,7 +13,8 @@ public class ProjectileScript : MonoBehaviour
     public float shootForce, upwardForce;
 
     public float timeBetweenShooting, spread, reloadTime, timeBetweenShots, pulloutTime;
-    public int magSize, bulletsPerTap, damage;
+    public int magSize = 12, bulletsPerTap, damage;
+    public int extraAmmo = 36; // Extra ammo pool
     public bool allowButtonHold;
     int bulletsLeft, bulletsShot;
     public float spreadDistance;
@@ -29,36 +30,28 @@ public class ProjectileScript : MonoBehaviour
     public AudioSource source;
     public AudioClip shootClip, enemyDie, hurt, hitClip;
 
-
-
-
-    //graphics
-    public GameObject muzzleFlash, reloadText;
+    // UI Elements
+    public GameObject muzzleFlash, reloadingText;
     public Transform muzzleFlashPos;
-    public TextMeshProUGUI ammoDisplay;
+    public TextMeshProUGUI ammoDisplay, totalAmmo;
     public Animator animator;
     public Sprite weaponIcon;
     public UnityEngine.UI.Image weaponIconUI;
 
-
     public bool allowInvoke = true;
-    // Start is called before the first frame update
+
     void Awake()
     {
-        //gameObject.tag = weaponTag;
         if (cam == null)
         {
-            cam = Camera.main;  // Automatically assigns the Main Camera
+            cam = Camera.main;
         }
 
-        // Assign the TextMeshProUGUI object in the scene to 'ammoDisplay'
         if (ammoDisplay == null)
         {
             ammoDisplay = GameObject.Find("Ammo Display").GetComponent<TextMeshProUGUI>();
-            // Replace "AmmoText" with the actual name of your TextMeshProUGUI object in the scene
+            totalAmmo = GameObject.Find("Total Ammo Display").GetComponent<TextMeshProUGUI>();
         }
-
-       
 
         animator = GetComponent<Animator>();
 
@@ -70,65 +63,71 @@ public class ProjectileScript : MonoBehaviour
 
     public void OnEnable()
     {
-        animator.Play("New State");  // Ensure the animation is reset
-        reloading = false;  // Stop reload status if any
+        animator.Play("New State");
+        reloading = false;
         transform.localPosition = originPos;
         transform.localRotation = originRotation;
         StartCoroutine(StartPullout());
     }
+
     public void OnDisable()
     {
         if (reloading)
         {
             StopCoroutine(StartReload());
             reloading = false;
-            animator.Play("New State");  // Reset animation
+            animator.Play("New State");
         }
         transform.localPosition = originPos;
         transform.localRotation = originRotation;
     }
+
     public void Start()
     {
         weaponIconUI = GameObject.Find("Weapon Image").GetComponent<UnityEngine.UI.Image>();
         weaponIconUI.sprite = weaponIcon;
     }
+
     private void MyInput()
     {
-        //check if allowed to hold down button
-        if (allowButtonHold) shooting = Input.GetKey(KeyCode.Mouse0);
-        else shooting = Input.GetKeyDown(KeyCode.Mouse0);
+        if (allowButtonHold)
+            shooting = Input.GetKey(KeyCode.Mouse0);
+        else
+            shooting = Input.GetKeyDown(KeyCode.Mouse0);
 
-        //reloading
-        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magSize && !reloading && allowInvoke   ) Reload();
+        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magSize && !reloading && extraAmmo > 0)
+            Reload();
 
-        //Reload auto if mag empty and try to shoot
-        if(readyToShoot && shooting && !reloading && bulletsLeft <= 0) Reload();
+        if (readyToShoot && shooting && !reloading && bulletsLeft <= 0 && extraAmmo > 0)
+            Reload();
 
-        //shooting
-        if(readyToShoot && shooting && !reloading && bulletsLeft > 0)
+        if (readyToShoot && shooting && !reloading && bulletsLeft > 0)
         {
             bulletsShot = 0;
             source.PlayOneShot(shootClip);
             Shoot();
         }
     }
-    // Update is called once per frame
+
     void Update()
     {
         MyInput();
 
-        //set ammo display
         if (ammoDisplay != null)
         {
             ammoDisplay.SetText(bulletsLeft + " / " + magSize);
         }
-        
+
+        if (totalAmmo != null)
+        {
+            totalAmmo.SetText(extraAmmo.ToString());
+        }
     }
 
     public void Shoot()
     {
         readyToShoot = false;
-        
+
         RaycastHit hit;
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit))
         {
@@ -141,10 +140,9 @@ public class ProjectileScript : MonoBehaviour
                     score += 1;
                     source.PlayOneShot(enemyDie);
                 }
-                
                 meleeEnemy.TakeDamage(damage);
-
             }
+
             EnemyGun enemyGun = hit.transform.GetComponentInParent<EnemyGun>();
             if (enemyGun != null)
             {
@@ -154,26 +152,22 @@ public class ProjectileScript : MonoBehaviour
                     score += 1;
                     source.PlayOneShot(enemyDie);
                 }
-                
                 enemyGun.TakeDamage(damage);
             }
         }
-        // this is for bounding projectiles: currentBullet.GetComponent<Rigidbody>().AddForce(cam.transform.up * upwardForce, ForceMode.Impulse);
-        
-        //instantiate muzzle flash
+
         if (muzzleFlash != null)
         {
             GameObject Flash = Instantiate(muzzleFlash, muzzleFlashPos);
             Destroy(Flash, 0.1f);
         }
-        
+
         StartCoroutine(StartRecoil());
 
         bulletsLeft--;
         bulletsShot++;
 
-        //invoke resetshot function
-        if(allowInvoke)
+        if (allowInvoke)
         {
             Invoke("ResetShot", timeBetweenShooting);
             allowInvoke = false;
@@ -192,17 +186,19 @@ public class ProjectileScript : MonoBehaviour
     IEnumerator StartReload()
     {
         animator.Play(reloadAnim);
-        reloadText.SetActive(true);
+        reloadingText.SetActive(true);
         yield return new WaitForSeconds(reloadTime);
-        reloadText.SetActive(false);
+        reloadingText.SetActive(false);
         animator.Play("New State");
     }
+
     IEnumerator StartPullout()
     {
         animator.Play(pulloutAnim);
         yield return new WaitForSeconds(pulloutTime);
         animator.Play("New State");
     }
+
     private void ResetShot()
     {
         readyToShoot = true;
@@ -211,13 +207,21 @@ public class ProjectileScript : MonoBehaviour
 
     private void Reload()
     {
+        if (extraAmmo <= 0 || bulletsLeft == magSize) return;
+
         reloading = true;
         StartCoroutine(StartReload());
         Invoke("ReloadFinished", reloadTime);
     }
+
     private void ReloadFinished()
     {
-        bulletsLeft = magSize;
+        int ammoNeeded = magSize - bulletsLeft;
+        int ammoToReload = Mathf.Min(ammoNeeded, extraAmmo);
+
+        bulletsLeft += ammoToReload;
+        extraAmmo -= ammoToReload;
+
         reloading = false;
     }
 }

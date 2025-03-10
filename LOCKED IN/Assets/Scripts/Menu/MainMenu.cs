@@ -8,7 +8,7 @@ public class MainMenu : MonoBehaviour
     }
     public void PlayGPGame()
     {
-        SceneManager.LoadScene("Gameplay Scene");
+        SceneManager.LoadScene("GPTransition");
     }
     public void QuitGame()
     {

@@ -9,6 +9,7 @@ using Unity.VisualScripting;
 public class Health : MonoBehaviour
 {
     public ProjectileScript projectileScript;
+    public GPProjectileScript gpProjectileScript;
     public int health;
     public TextMeshProUGUI healthUI;
     public TextMeshProUGUI shieldUI, timeUI, scoreUI, timerUI, deathUI;
@@ -76,7 +77,7 @@ public class Health : MonoBehaviour
         // Update health display independently
         if (healthUI) healthUI.SetText(health + " / " + maxHealth);
 
-        // Shield logic
+       /* // Shield logic
         if (shield > 0)
         {
             shieldParent.SetActive(true);
@@ -87,6 +88,7 @@ public class Health : MonoBehaviour
             shieldParent.SetActive(false);
             shield = 0;
         }
+       */
     }
 
     public void TakeDamage(int damage)
@@ -117,8 +119,16 @@ public class Health : MonoBehaviour
         isAlive = false; // Stop the timers
 
         if (timeUI) timeUI.SetText("Time: " + Mathf.FloorToInt(timeSurvived)); // Set final time
-        if (scoreUI) scoreUI.SetText("Score: " + projectileScript.score);
-        if (timerUI) timerUI.SetText("Timer: 00.00"); // Stop the countdown at 0
+        if (projectileScript != null)
+        {
+            if (scoreUI) scoreUI.SetText("Score: " + projectileScript.score);
+        }
+        else
+        {
+            if (scoreUI) scoreUI.SetText("Score: " + gpProjectileScript.score);
+        }
+        
+        //if (timerUI) timerUI.SetText("Timer: 00.00"); // Stop the countdown at 0
 
         // Pause the game
         Time.timeScale = 0;

@@ -14,5 +14,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Gameplay Scene.unity
     guid: b394a7d6a1d17df4890f4122f944d3b1
+  - enabled: 1
+    path: Assets/Scenes/GPTransition.unity
+    guid: c08db7a7657434a439252dd59423a337
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
