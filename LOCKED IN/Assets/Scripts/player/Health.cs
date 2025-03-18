@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Unity.VisualScripting;
+using UnityEngine.EventSystems;
 
 public class Health : MonoBehaviour
 {
@@ -117,6 +118,8 @@ public class Health : MonoBehaviour
         Debug.Log("Player has died!");
         deathText.SetActive(true);
         isAlive = false; // Stop the timers
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+        UnityEngine.Cursor.visible = true;
 
         if (timeUI) timeUI.SetText("Time: " + Mathf.FloorToInt(timeSurvived)); // Set final time
         if (projectileScript != null)
@@ -127,8 +130,9 @@ public class Health : MonoBehaviour
         {
             if (scoreUI) scoreUI.SetText("Score: " + gpProjectileScript.score);
         }
-        
+
         //if (timerUI) timerUI.SetText("Timer: 00.00"); // Stop the countdown at 0
+        
 
         // Pause the game
         Time.timeScale = 0;

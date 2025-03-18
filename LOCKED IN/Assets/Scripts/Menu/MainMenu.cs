@@ -10,6 +10,11 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene("GPTransition");
     }
+    public void PlayAudioGame()
+    {
+        SceneManager.LoadScene("Auditory Scene");
+        Debug.Log("gameloaded");
+    }
     public void QuitGame()
     {
         Debug.Log("Quit Game");

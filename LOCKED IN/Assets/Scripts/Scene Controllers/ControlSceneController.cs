@@ -64,4 +64,5 @@ public class ControlSceneController : MonoBehaviour
 
         Instantiate(enemyPrefab, spawnpoint.position, spawnpoint.rotation);
     }
+
 }
