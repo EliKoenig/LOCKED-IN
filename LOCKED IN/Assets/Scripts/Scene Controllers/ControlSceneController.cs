@@ -13,7 +13,10 @@ public class ControlSceneController : MonoBehaviour
     string[] enemyTypes = { "Prefabs/RangedEnemy", "Prefabs/MeleeEnemy" };
 
     private float currentSpawnRate;
-
+    private void Awake()
+    {
+        Time.timeScale = 1;
+    }
     void Start()
     {
         currentSpawnRate = initialSpawnRate;

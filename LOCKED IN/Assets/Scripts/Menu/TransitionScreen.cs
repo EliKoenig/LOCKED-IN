@@ -8,6 +8,11 @@ public class TransitionScreen : MonoBehaviour
     public TextMeshProUGUI objectiveText;
     public float displayTime = 3f; // Time before switching to game scene
 
+
+    private void Awake()
+    {
+        Time.timeScale = 1;
+    }
     void Start()
     {
         // Generate a random number between 18 and 27
