@@ -15,6 +15,10 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("Auditory Scene");
         Debug.Log("gameloaded");
     }
+    public void PlayVisualGame()
+    {
+        SceneManager.LoadScene("VisualScene");
+    }
     public void QuitGame()
     {
         Debug.Log("Quit Game");

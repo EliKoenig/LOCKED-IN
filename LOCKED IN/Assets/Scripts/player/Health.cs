@@ -20,7 +20,7 @@ public class Health : MonoBehaviour
     public GameObject shieldParent;
     public GameObject deathText;
     public AudioSource source;
-    public AudioClip hurt;
+    public AudioClip hurt, death, injured;
 
     private float timeSurvived;
     private float countdownTimer = 90f; // Countdown starts at 60 seconds
@@ -56,8 +56,10 @@ public class Health : MonoBehaviour
 
     void Update()
     {
+
         if (isAlive)
         {
+
             timeSurvived += Time.deltaTime;  // Increment time while alive
             if (timeUI) timeUI.SetText("Time: " + Mathf.FloorToInt(timeSurvived)); // Update UI
 
@@ -94,6 +96,7 @@ public class Health : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+
         source.PlayOneShot(hurt);
         if (shield > 0)
         {
@@ -106,15 +109,24 @@ public class Health : MonoBehaviour
             health -= damage;
         }
 
+        if (health < 40)
+        {
+            source.clip = injured;
+            source.loop = true;
+            source.Play();
+        }
+
         health = Mathf.Max(health, 0);  // Ensures health doesn't go below 0
         if (health <= 0)
         {
+            source.Stop();
             Die();
         }
     }
 
     private void Die()
     {
+        source.PlayOneShot(death);
         Debug.Log("Player has died!");
         deathText.SetActive(true);
         isAlive = false; // Stop the timers

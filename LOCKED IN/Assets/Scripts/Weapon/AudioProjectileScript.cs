@@ -89,6 +89,7 @@ public class AudioProjectileScript : MonoBehaviour
     }
     public void Start()
     {
+        source.PlayOneShot(music);
         weaponIconUI = GameObject.Find("Weapon Image").GetComponent<UnityEngine.UI.Image>();
         weaponIconUI.sprite = weaponIcon;
     }
@@ -132,27 +133,27 @@ public class AudioProjectileScript : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit))
         {
-            MeleeEnemy meleeEnemy = hit.transform.GetComponent<MeleeEnemy>();
+            AMeleeEnemy meleeEnemy = hit.transform.GetComponent<AMeleeEnemy>();
             if (meleeEnemy != null)
             {
-                source.PlayOneShot(hitClip);
+                
                 if (meleeEnemy.health - damage <= 0)
                 {
                     score += 1;
-                    source.PlayOneShot(enemyDie);
+                    
                 }
 
                 meleeEnemy.TakeDamage(damage);
 
             }
-            EnemyGun enemyGun = hit.transform.GetComponentInParent<EnemyGun>();
+            AEnemyGun enemyGun = hit.transform.GetComponentInParent<AEnemyGun>();
             if (enemyGun != null)
             {
-                source.PlayOneShot(hitClip);
+                
                 if (enemyGun.health - damage <= 0)
                 {
                     score += 1;
-                    source.PlayOneShot(enemyDie);
+                    
                 }
 
                 enemyGun.TakeDamage(damage);

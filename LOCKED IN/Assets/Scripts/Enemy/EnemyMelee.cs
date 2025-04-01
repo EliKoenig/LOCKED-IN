@@ -16,6 +16,7 @@ public class MeleeEnemy : MonoBehaviour
     private bool isAttacking;
     private Animator animator;
     public AudioSource source;
+    public AudioClip hit, enemyDie, shoot;
    
 
     void Start()
@@ -71,13 +72,19 @@ public class MeleeEnemy : MonoBehaviour
     // Method to handle damage from bullets
     public void TakeDamage(int damage)
     {
+
         health -= damage;
         Debug.Log("Enemy takes " + damage + " damage. Remaining health: " + health);
 
         if (health <= 0)
         {
+            source.PlayOneShot(enemyDie);
             Debug.Log("Enemy has been defeated!");
             Destroy(gameObject);
+        }
+        else
+        {
+            source.PlayOneShot(hit);
         }
     }
 }
