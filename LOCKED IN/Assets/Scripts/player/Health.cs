@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Unity.VisualScripting;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering.PostProcessing;
 
 public class Health : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class Health : MonoBehaviour
     public GameObject deathText;
     public AudioSource source;
     public AudioClip hurt, death, injured;
+    
 
     private float timeSurvived;
     private float countdownTimer = 90f; // Countdown starts at 60 seconds
