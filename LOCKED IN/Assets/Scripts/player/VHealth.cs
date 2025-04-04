@@ -24,9 +24,11 @@ public class VHealth : MonoBehaviour
     public AudioClip hurt, death, injured;
     public float intensity;
 
+    private Coroutine passiveBloodCoroutine;
     public PostProcessVolume pPVolume;
     Vignette vignette;
-
+    private bool isFadingUp = true;
+    private bool isPulsing = false;
 
     private float timeSurvived;
     private float countdownTimer = 90f; // Countdown starts at 60 seconds
@@ -35,7 +37,7 @@ public class VHealth : MonoBehaviour
     void Awake()
     {
         // Assign UI elements safely
-        healthUI = GameObject.Find("Health Text")?.GetComponent<TextMeshProUGUI>();
+        //healthUI = GameObject.Find("Health Text")?.GetComponent<TextMeshProUGUI>();
         shieldUI = GameObject.Find("Shield Text")?.GetComponent<TextMeshProUGUI>();
         // timeUI = GameObject.Find("Time Text")?.GetComponent<TextMeshProUGUI>();
         timerUI = GameObject.Find("Timer Text")?.GetComponent<TextMeshProUGUI>();
@@ -58,11 +60,13 @@ public class VHealth : MonoBehaviour
 
         // Initialize UI text
         if (timerUI) timerUI.SetText("Timer: 90.0");
-        if (healthUI) healthUI.SetText(health + " / " + maxHealth);
+        healthUI.SetText(health + " / " + maxHealth);
     }
 
     void Update()
     {
+
+
 
         if (isAlive)
         {
@@ -85,7 +89,7 @@ public class VHealth : MonoBehaviour
         }
 
         // Update health display independently
-        if (healthUI) healthUI.SetText(health + " / " + maxHealth);
+        healthUI.SetText(health + " / " + maxHealth);
 
         /* // Shield logic
          if (shield > 0)
@@ -103,8 +107,8 @@ public class VHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-
         source.PlayOneShot(hurt);
+
         if (shield > 0)
         {
             int remainingDamage = Mathf.Max(damage - shield, 0);
@@ -114,7 +118,15 @@ public class VHealth : MonoBehaviour
         else
         {
             health -= damage;
-            StartCoroutine(BloodEffect());
+
+            if (health >= 50) // Only play the regular blood effect above 50 HP
+            {
+                StartCoroutine(BloodEffect());
+            }
+            else if (!isPulsing) // If already below 50 HP, don't play regular effect, start pulsing instead
+            {
+                StartCoroutine(BloodEffectPulse());
+            }
         }
 
         if (health < 40)
@@ -124,13 +136,14 @@ public class VHealth : MonoBehaviour
             source.Play();
         }
 
-        health = Mathf.Max(health, 0);  // Ensures health doesn't go below 0
+        health = Mathf.Max(health, 0); // Ensures health doesn't go below 0
         if (health <= 0)
         {
             source.Stop();
             Die();
         }
     }
+
 
     private void Die()
     {
@@ -182,10 +195,55 @@ public class VHealth : MonoBehaviour
             intensity -= 0.01f;
 
             if (intensity < 0) intensity = 0;
+            
+            vignette.intensity.Override(intensity);
+
             yield return new WaitForSeconds(0.1f);
         }
         vignette.enabled.Override(false);
         yield break;
     }
+    private IEnumerator BloodEffectPulse()
+    {
+        //if (isPulsing) yield break; // Prevent multiple coroutines
+        isPulsing = true;
+        vignette.enabled.Override(true); // Ensure vignette is active
+
+        float maxIntensity = 0.7f;
+        float minIntensity = 0.2f;
+        float fadeSpeed = 0.01f; // Adjust for smoothness
+
+        while (health < 50)
+        {
+            // Fade in (0.2 -> 0.7)
+             intensity = maxIntensity;
+
+            // Fade out (0.7 -> 0.2)
+            while (intensity > minIntensity)
+            {
+                intensity -= fadeSpeed;
+                if (intensity < minIntensity) intensity = minIntensity;
+                vignette.intensity.Override(intensity);
+                yield return new WaitForSeconds(0.03f);
+            }
+            //vignette.enabled.Override(false);
+            while (intensity < maxIntensity)
+            {
+                Debug.Log("Before " + intensity);
+                intensity += fadeSpeed*2;
+                Debug.Log(intensity);
+                if (intensity > maxIntensity) intensity= maxIntensity;
+                vignette.intensity.Override(intensity);
+                yield return new WaitForSeconds(0.03f); // Smooth transition
+            }
+            //vignette.enabled.Override(false);
+
+        }
+
+        //vignette.intensity.Override(minIntensity); // Reset if health goes above 50
+        //vignette.enabled.Override(false); // Turn off effect when stopping
+       // isPulsing = false;
+    }
+
 }
 

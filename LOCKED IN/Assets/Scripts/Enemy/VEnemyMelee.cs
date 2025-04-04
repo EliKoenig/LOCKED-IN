@@ -12,7 +12,7 @@ public class VMeleeEnemy : MonoBehaviour
     public int health = 60;
     private NavMeshAgent agent;
     private GameObject target;
-    private Health targetHealth;
+    private VHealth targetHealth;
     private bool isAttacking;
     private Animator animator;
     public AnimationClip deathAnim;
@@ -27,7 +27,7 @@ public class VMeleeEnemy : MonoBehaviour
         animator = GetComponent<Animator>();
 
         // Access the player's Health component
-        targetHealth = target.GetComponent<Health>();
+        targetHealth = target.GetComponent<VHealth>();
         isAttacking = false;
     }
 
