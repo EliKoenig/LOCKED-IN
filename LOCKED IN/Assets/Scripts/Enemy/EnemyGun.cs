@@ -70,6 +70,7 @@ public class EnemyGun : MonoBehaviour
     {
         CanSeePlayer();
         currentState = stateMachine.activeState.ToString();
+
     }
     public bool CanSeePlayer()
     {

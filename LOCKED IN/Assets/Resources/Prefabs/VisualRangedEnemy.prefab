@@ -119,6 +119,7 @@ GameObject:
   - component: {fileID: 7912631811229029292}
   - component: {fileID: 7893435695684419280}
   - component: {fileID: 4428685264821023673}
+  - component: {fileID: -5355427996229636348}
   - component: {fileID: 754376202949473353}
   - component: {fileID: 1359300940546592808}
   m_Layer: 0
@@ -174,7 +175,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 571422960836954762}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4279c2dfcd4e2314aace75b402ff4a1d, type: 3}
   m_Name: 
@@ -191,6 +192,30 @@ MonoBehaviour:
   shootClip: {fileID: 8300000, guid: 1506d966efdfc144f9a93f3bea9a1a3f, type: 3}
   gunBarrel: {fileID: 5930523698904185563}
   fireRate: 0.9
+--- !u!114 &-5355427996229636348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571422960836954762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79a59c42f767df74b914cb707e746549, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waypoints: []
+  currentState: 
+  path: {fileID: 0}
+  sightDistance: 20
+  fov: 85
+  health: 80
+  accuracy: 0
+  eyeHeight: 0
+  source: {fileID: 0}
+  shootClip: {fileID: 0}
+  gunBarrel: {fileID: 0}
+  fireRate: 0.1
 --- !u!114 &754376202949473353
 MonoBehaviour:
   m_ObjectHideFlags: 0

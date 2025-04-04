@@ -145,7 +145,7 @@ public class VProjectileScript : MonoBehaviour
                 meleeEnemy.TakeDamage(damage);
 
             }
-            EnemyGun enemyGun = hit.transform.GetComponentInParent<EnemyGun>();
+            VEnemyGun enemyGun = hit.transform.GetComponentInParent<VEnemyGun>();
             if (enemyGun != null)
             {
                 source.PlayOneShot(hitClip);

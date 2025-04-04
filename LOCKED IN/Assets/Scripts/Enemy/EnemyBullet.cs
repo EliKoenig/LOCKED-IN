@@ -8,7 +8,14 @@ public class EnemyBullet : MonoBehaviour
         Transform hitTransform = collision.transform;
         if(hitTransform.CompareTag("Player"))
         {
-            hitTransform.GetComponent<Health>().TakeDamage(15);
+            if (hitTransform.GetComponent<Health>() != null)
+            {
+                hitTransform.GetComponent<Health>().TakeDamage(15);
+            }
+            else
+            {
+                hitTransform.GetComponent<VHealth>().TakeDamage(15);
+            }
         }
         Destroy(gameObject);    
     }
