@@ -34,6 +34,7 @@ public class VAttackState : VBaseState
                 losingPlayerTimer = 0;
                 if (shotTimer > enemy.fireRate)
                 {
+                    enemy.PlayMuzzleFlash();
                     Shoot();
                 }
                 if (moveTimer > Random.Range(3, 7))
@@ -76,4 +77,5 @@ public class VAttackState : VBaseState
 
         shotTimer = 0;
     }
+
 }

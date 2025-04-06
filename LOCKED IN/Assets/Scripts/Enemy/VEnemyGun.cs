@@ -1,3 +1,5 @@
+using Autodesk.Fbx;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -23,6 +25,11 @@ public class VEnemyGun : MonoBehaviour
     public float eyeHeight;
     public AudioSource source;
     public AudioClip shootClip;
+    public GameObject light;
+
+    public Transform model;
+    public Animator animator;
+
     public Vector3 LastKnowPos { get => lastKnowPos; set => lastKnowPos = value; }
 
     public Transform gunBarrel;
@@ -31,6 +38,7 @@ public class VEnemyGun : MonoBehaviour
 
     void Start()
     {
+        animator.SetTrigger("Idle");
         stateMachine = GetComponent<VStateMachine>();
         agent = GetComponent<NavMeshAgent>();
         stateMachine.Initialize();
@@ -72,18 +80,78 @@ public class VEnemyGun : MonoBehaviour
         currentState = stateMachine.activeState.ToString();
         AnimateEnemy();
 
+        // Rotate the parent (for movement)
+        RotateParent();
 
+        // Make sure the child model doesn't rotate (locks X and Z rotation)
+        KeepModelUpright();
     }
     private void AnimateEnemy()
     {
-        float agentXVelocity;
-        float agentZVelocity;
+        Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity);
+        float x = localVelocity.x;
+        float z = localVelocity.z;
 
-        agentXVelocity = agent.velocity.x;
-        agentZVelocity = agent.velocity.z;
+        Debug.Log("x = " + x + ", z = " +  z);
 
-        Debug.Log("x = " + agentXVelocity + ", z = " +  agentZVelocity);
+        if (Mathf.Abs(x) < 0.2 && Mathf.Abs(z) < 0.2)
+        {
+            animator.speed = 1f;
+            animator.SetTrigger("Idle");
+        }
+        else if(x < -3.0f && z > -1.0f)
+        {
+            animator.speed = 1f;
+            animator.SetTrigger("Left");
+        }
+        else if (x > 3.0f && z < 1.0f)
+        {
+            animator.speed = 1f;
+            animator.SetTrigger("Right");
+        }
+        else if (Mathf.Abs(x) < 1.0f && z > 3.0f)
+        {
+            animator.speed = 1f;
+            animator.SetTrigger("Walking");
+        }
+        else if (Mathf.Abs(x) < 1.0f && z >3.0f)
+        {
+            animator.speed = -1f;
+            animator.SetTrigger("Walking");
+        }
     }
+    void RotateParent()
+    {
+        if (player != null)
+        {
+            // Rotate the parent GameObject to face the player on the Y-axis
+            Vector3 directionToPlayer = player.transform.position - transform.position;
+            directionToPlayer.y = 0; // Ignore vertical component to prevent tilting
+            Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f); // Smooth rotation
+        }
+    }
+    public void PlayMuzzleFlash()
+    {
+        StartCoroutine(ShotLight());
+    }
+    private IEnumerator ShotLight()
+    {
+        light.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        light.SetActive(false);
+        yield break;
+    }
+    void KeepModelUpright()
+    {
+        if (model != null)
+        {
+            // Lock X and Z rotations on the child model (the actual enemy mesh)
+            Vector3 modelRotation = model.rotation.eulerAngles;
+            model.rotation = Quaternion.Euler(0f, modelRotation.y, 0f); // Keep model upright, only allow Y rotation
+        }
+    }
+
     public bool CanSeePlayer()
     {
         if (player != null)
