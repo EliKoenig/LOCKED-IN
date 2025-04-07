@@ -12,16 +12,18 @@ public class Health : MonoBehaviour
 {
     public ProjectileScript projectileScript;
     public GPProjectileScript gpProjectileScript;
+    public AudioProjectileScript audioProjectileScript;
     public int health;
     public TextMeshProUGUI healthUI;
     public TextMeshProUGUI shieldUI, timeUI, scoreUI, timerUI, deathUI;
     public UnityEngine.UI.Image shieldImage;
     public int maxHealth;
     public int shield;
-    public GameObject shieldParent;
+    public GameObject shieldParent, crosshair;
     public GameObject deathText;
     public AudioSource source;
     public AudioClip hurt, death, injured;
+    private bool isPlayingBreath = false;
     
 
     private float timeSurvived;
@@ -33,7 +35,7 @@ public class Health : MonoBehaviour
         // Assign UI elements safely
         healthUI = GameObject.Find("Health Text")?.GetComponent<TextMeshProUGUI>();
         shieldUI = GameObject.Find("Shield Text")?.GetComponent<TextMeshProUGUI>();
-       // timeUI = GameObject.Find("Time Text")?.GetComponent<TextMeshProUGUI>();
+        //timeUI = GameObject.Find("Time Text")?.GetComponent<TextMeshProUGUI>();
         timerUI = GameObject.Find("Timer Text")?.GetComponent<TextMeshProUGUI>();
         shieldParent = GameObject.Find("Shield Parent");
 
@@ -111,8 +113,9 @@ public class Health : MonoBehaviour
             health -= damage;
         }
 
-        if (health < 40)
+        if (health < 40 && isPlayingBreath == false)
         {
+            isPlayingBreath = true;
             source.clip = injured;
             source.loop = true;
             source.Play();
@@ -131,6 +134,7 @@ public class Health : MonoBehaviour
         source.PlayOneShot(death);
         Debug.Log("Player has died!");
         deathText.SetActive(true);
+        crosshair.SetActive(false);
         isAlive = false; // Stop the timers
         UnityEngine.Cursor.lockState = CursorLockMode.None;
         UnityEngine.Cursor.visible = true;
@@ -140,13 +144,16 @@ public class Health : MonoBehaviour
         {
             if (scoreUI) scoreUI.SetText("Score: " + projectileScript.score);
         }
-        else
+        else if (gpProjectileScript != null)
         {
             if (scoreUI) scoreUI.SetText("Score: " + gpProjectileScript.score);
         }
-
+        else
+        {
+            if (scoreUI) scoreUI.SetText("Score: " + audioProjectileScript.score);
+        }
         //if (timerUI) timerUI.SetText("Timer: 00.00"); // Stop the countdown at 0
-        
+
 
         // Pause the game
         Time.timeScale = 0;
@@ -155,11 +162,26 @@ public class Health : MonoBehaviour
     {
         Debug.Log("Timer Ended");
         deathText.SetActive(true);
+        crosshair.SetActive(false);
         deathUI.SetText("Game Over!");
         isAlive = false; // Stop the timers
-
-        if (timeUI) timeUI.SetText("Time: " + Mathf.FloorToInt(timeSurvived)); // Set final time
-        if (scoreUI) scoreUI.SetText("Score: " + projectileScript.score);
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+        UnityEngine.Cursor.visible = true;
+        // Manually finalize the time before setting text
+        timeSurvived += Time.deltaTime;
+        if (timeUI) timeUI.SetText("Time: " + Mathf.FloorToInt(timeSurvived));
+        if (projectileScript != null)
+        {
+            if (scoreUI) scoreUI.SetText("Score: " + projectileScript.score);
+        }
+        else if (gpProjectileScript != null)
+        {
+            if (scoreUI) scoreUI.SetText("Score: " + gpProjectileScript.score);
+        }
+        else
+        {
+            if (scoreUI) scoreUI.SetText("Score: " + audioProjectileScript.score);
+        }
         if (timerUI) timerUI.SetText(""); // Stop the countdown at 0
 
         // Pause the game

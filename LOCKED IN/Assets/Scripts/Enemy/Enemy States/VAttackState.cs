@@ -29,6 +29,8 @@ public class VAttackState : VBaseState
             moveTimer += Time.deltaTime;
             shotTimer += Time.deltaTime;
             enemy.transform.LookAt(enemy.Player.transform);
+            Quaternion currentRotation = enemy.transform.rotation;
+            enemy.transform.rotation = Quaternion.Euler(0f, currentRotation.eulerAngles.y, 0f);
             if (enemy.CanSeePlayer())
             {
                 losingPlayerTimer = 0;

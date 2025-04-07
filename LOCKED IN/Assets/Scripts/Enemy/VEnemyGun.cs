@@ -12,7 +12,7 @@ public class VEnemyGun : MonoBehaviour
     public NavMeshAgent Agent { get => agent; }
     public GameObject Player { get => player; }
     public List<Transform> waypoints = new List<Transform>();
-    //debugging
+
     [SerializeField]
     private string currentState;
     public Path path;
@@ -26,6 +26,7 @@ public class VEnemyGun : MonoBehaviour
     public AudioSource source;
     public AudioClip shootClip;
     public GameObject light;
+    public AnimationClip deathAnimation;
 
     public Transform model;
     public Animator animator;
@@ -41,6 +42,7 @@ public class VEnemyGun : MonoBehaviour
         animator.SetTrigger("Idle");
         stateMachine = GetComponent<VStateMachine>();
         agent = GetComponent<NavMeshAgent>();
+        agent.updateRotation = false;
         stateMachine.Initialize();
         player = GameObject.FindGameObjectWithTag("Player");
         path = GameObject.FindGameObjectWithTag("Path").GetComponent<Path>();
@@ -51,55 +53,72 @@ public class VEnemyGun : MonoBehaviour
             return;
         }
 
-        // Create a temporary list to avoid modifying the original possibleWaypoints list
         List<Transform> tempWaypoints = new List<Transform>(path.possibleWaypoints);
 
-        // Randomly pick 4 waypoints
         for (int i = 0; i < 4; i++)
         {
             int randomIndex = Random.Range(0, tempWaypoints.Count);
             waypoints.Add(tempWaypoints[randomIndex]);
-            tempWaypoints.RemoveAt(randomIndex); // Remove the chosen waypoint to avoid duplicates
+            tempWaypoints.RemoveAt(randomIndex);
         }
     }
+
     public void TakeDamage(int damage)
     {
         health -= damage;
         Debug.Log("Enemy takes " + damage + " damage. Remaining health: " + health);
 
-
         if (health <= 0)
         {
+            StartCoroutine(EnemyDeath());
             Debug.Log("Enemy has been defeated!");
-            Destroy(gameObject);
         }
     }
+
+    private IEnumerator EnemyDeath()
+    {
+        Quaternion currentRotation = transform.rotation;
+        transform.rotation = Quaternion.Euler(0f, currentRotation.eulerAngles.y, 0f);
+        model.localRotation = Quaternion.Euler(0f, model.localRotation.eulerAngles.y, 0f);
+        animator.speed = 1f;
+
+        animator.SetTrigger("Die");
+        GetComponent<Collider>().enabled = false;
+        GetComponent<NavMeshAgent>().enabled = false;
+        stateMachine.enabled = false;
+        this.enabled = false;
+
+        yield return new WaitForSeconds(deathAnimation.length);
+        Destroy(gameObject);
+    }
+
     public void Update()
     {
+        // Lock GameObject's X and Z rotation to 0
+
+
         CanSeePlayer();
         currentState = stateMachine.activeState.ToString();
+        Quaternion currentRotation = transform.rotation;
+        transform.rotation = Quaternion.Euler(0f, currentRotation.eulerAngles.y, 0f);
+        Debug.Log(transform.rotation.x);
         AnimateEnemy();
-
-        // Rotate the parent (for movement)
-        RotateParent();
-
-        // Make sure the child model doesn't rotate (locks X and Z rotation)
-        KeepModelUpright();
     }
+
     private void AnimateEnemy()
     {
         Vector3 localVelocity = transform.InverseTransformDirection(agent.velocity);
         float x = localVelocity.x;
         float z = localVelocity.z;
 
-        Debug.Log("x = " + x + ", z = " +  z);
+        Debug.Log("x = " + x + ", z = " + z);
 
         if (Mathf.Abs(x) < 0.2 && Mathf.Abs(z) < 0.2)
         {
             animator.speed = 1f;
             animator.SetTrigger("Idle");
         }
-        else if(x < -3.0f && z > -1.0f)
+        else if (x < -3.0f && z > -1.0f)
         {
             animator.speed = 1f;
             animator.SetTrigger("Left");
@@ -114,42 +133,24 @@ public class VEnemyGun : MonoBehaviour
             animator.speed = 1f;
             animator.SetTrigger("Walking");
         }
-        else if (Mathf.Abs(x) < 1.0f && z >3.0f)
+        else if (Mathf.Abs(x) < 1.0f && z > 3.0f)
         {
             animator.speed = -1f;
             animator.SetTrigger("Walking");
         }
     }
-    void RotateParent()
-    {
-        if (player != null)
-        {
-            // Rotate the parent GameObject to face the player on the Y-axis
-            Vector3 directionToPlayer = player.transform.position - transform.position;
-            directionToPlayer.y = 0; // Ignore vertical component to prevent tilting
-            Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f); // Smooth rotation
-        }
-    }
+
     public void PlayMuzzleFlash()
     {
         StartCoroutine(ShotLight());
     }
+
     private IEnumerator ShotLight()
     {
         light.SetActive(true);
         yield return new WaitForSeconds(0.1f);
         light.SetActive(false);
         yield break;
-    }
-    void KeepModelUpright()
-    {
-        if (model != null)
-        {
-            // Lock X and Z rotations on the child model (the actual enemy mesh)
-            Vector3 modelRotation = model.rotation.eulerAngles;
-            model.rotation = Quaternion.Euler(0f, modelRotation.y, 0f); // Keep model upright, only allow Y rotation
-        }
     }
 
     public bool CanSeePlayer()
@@ -172,7 +173,6 @@ public class VEnemyGun : MonoBehaviour
                             return true;
                         }
                     }
-
                 }
             }
         }

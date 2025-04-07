@@ -10,7 +10,7 @@ using UnityEngine.Rendering.PostProcessing;
 
 public class VHealth : MonoBehaviour
 {
-    public ProjectileScript projectileScript;
+    public VProjectileScript projectileScript;
     public GPProjectileScript gpProjectileScript;
     public int health;
     public TextMeshProUGUI healthUI;
@@ -19,7 +19,7 @@ public class VHealth : MonoBehaviour
     public int maxHealth;
     public int shield;
     public GameObject shieldParent;
-    public GameObject deathText;
+    public GameObject deathText, crosshair;
     public AudioSource source;
     public AudioClip hurt, death, injured;
     public float intensity;
@@ -150,6 +150,7 @@ public class VHealth : MonoBehaviour
         source.PlayOneShot(death);
         Debug.Log("Player has died!");
         deathText.SetActive(true);
+        crosshair.SetActive(false);
         isAlive = false; // Stop the timers
         UnityEngine.Cursor.lockState = CursorLockMode.None;
         UnityEngine.Cursor.visible = true;
@@ -159,10 +160,7 @@ public class VHealth : MonoBehaviour
         {
             if (scoreUI) scoreUI.SetText("Score: " + projectileScript.score);
         }
-        else
-        {
-            if (scoreUI) scoreUI.SetText("Score: " + gpProjectileScript.score);
-        }
+
 
         //if (timerUI) timerUI.SetText("Timer: 00.00"); // Stop the countdown at 0
 
@@ -174,11 +172,19 @@ public class VHealth : MonoBehaviour
     {
         Debug.Log("Timer Ended");
         deathText.SetActive(true);
+        crosshair.SetActive(false);
         deathUI.SetText("Game Over!");
         isAlive = false; // Stop the timers
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+        UnityEngine.Cursor.visible = true;
+        // Manually finalize the time before setting text
+        timeSurvived += Time.deltaTime;
+        if (timeUI) timeUI.SetText("Time: " + Mathf.FloorToInt(timeSurvived));
+        if (projectileScript != null)
+        {
+            if (scoreUI) scoreUI.SetText("Score: " + projectileScript.score);
+        }
 
-        if (timeUI) timeUI.SetText("Time: " + Mathf.FloorToInt(timeSurvived)); // Set final time
-        if (scoreUI) scoreUI.SetText("Score: " + projectileScript.score);
         if (timerUI) timerUI.SetText(""); // Stop the countdown at 0
 
         // Pause the game
